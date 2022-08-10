@@ -1,22 +1,29 @@
 const { fetchAll, fetch } = require("../../utils/postgres");
 
-const ALL_USER = `
-    select * from users 
+const ALL_USERS = `
+    SELECT * FROM users ORDER BY user_id
 `;
 
-const CREATE_USER = `
-    INSERT INTO users (user_name, user_phone) VALUES ( $1, $2 ) RETURNING *
+const USER_BY_ID = `
+    SELECT * FROM users WHERE user_id = $1
 `;
 
-const DELETE_USER = `delete from users WHERE user_id = $1 RETURNING *`;
+const USER = `
+    SELECT * FROM users WHERE user_name = $1 and user_password = $2
+`;
 
-const getUser = () => fetchAll(ALL_USER);
-const createdUser = (name, phone) => fetch(CREATE_USER, name, phone);
+const NEW_USER = `
+    INSERT INTO users(user_name, user_password) VALUES($1, $2) RETURNING *
+`;
 
-const deleteUser = (id) => fetch(DELETE_USER, id);
+const getUsers = () => fetchAll(ALL_USERS);
+const getUserByID = (id) => fetch(USER_BY_ID, id);
+const newUser = (name, password) => fetch(NEW_USER, name, password);
+const login = (name, password) => fetch(USER, name, password);
 
 module.exports = {
-  getUser,
-  createdUser,
-  deleteUser,
+  getUsers,
+  getUserByID,
+  newUser,
+  login,
 };

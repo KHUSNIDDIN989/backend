@@ -40,6 +40,14 @@ CREATE TABLE orders (
 );
 
 
+CREATE TABLE users (
+    user_id serial not null PRIMARY KEY,
+    user_name varchar(16) not null,
+    user_password varchar(16) not null
+);
+
+
+
 
 SELECT 
     

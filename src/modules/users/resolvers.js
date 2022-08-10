@@ -1,16 +1,40 @@
 const model = require("./model");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   Query: {
-    users: async () => await model.getUser(),
+    users: async () => {
+      return await model.getUsers();
+    },
+    user: async (_, {}, { authorization }) => {
+      const { id } = jwt.verify(authorization, "SECRET_KEY");
+
+      return await model.getUserByID(id);
+    },
+  },
+  Mutation: {
+    newUser: async (_, { name, password }) => {
+      const createdUser = await model.newUser(name, password);
+
+      if (!createdUser) {
+        return "Tur yoqol";
+      }
+
+      return jwt.sign({ id: createdUser.user_id }, "SECRET_KEY");
+    },
+    login: async (_, { username, password }) => {
+      const foundUser = await model.login(username, password);
+
+      if (!foundUser) {
+        return "Tur yoqol";
+      }
+
+      return jwt.sign({ id: foundUser.user_id }, "SECRET_KEY");
+    },
   },
   User: {
     id: (g) => g.user_id,
     name: (g) => g.user_name,
-    phone: (g) => g.user_phone,
-  },
-  Mutation: {
-    newUser: async (_, { name, phone }) => await model.createdUser(name, phone),
-    deleteUser: async (_, { id }) => await model.deleteUser(id),
+    password: (g) => g.user_password,
   },
 };
