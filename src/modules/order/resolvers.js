@@ -20,13 +20,20 @@ module.exports = {
       _,
       { orderName, orderUserName, orderUserNumber, orderedUserLocation }
     ) => {
-      const a = await model.createOrder(
-        orderName,
-        orderUserName,
-        orderUserNumber,
+      if (
+        orderName &&
+        orderUserName &&
+        orderUserNumber &&
         orderedUserLocation
-      );
-      return a;
+      ) {
+        const a = await model.createOrder(
+          orderName,
+          orderUserName,
+          orderUserNumber,
+          orderedUserLocation
+        );
+        return a;
+      }
     },
     deleteorder: async (_, { id }) => await model.deleteOrder(id),
   },

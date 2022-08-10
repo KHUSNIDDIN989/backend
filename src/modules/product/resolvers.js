@@ -19,8 +19,12 @@ module.exports = {
     res: (g) => g.res_id,
   },
   Mutation: {
-    newproduct: async (_, { name, price, img, res }) =>
-      await model.createProduct(name, price, img, res),
+    newproduct: async (_, { name, price, img, res }) => {
+      if (name && price && img && res) {
+        return await model.createProduct(name, price, img, res);
+      }
+    },
+
     deleteProduct: async (_, { id }) => await model.deleteProduct(id),
   },
 };
