@@ -17,16 +17,15 @@ module.exports = {
       const createdUser = await model.newUser(name, password);
 
       if (!createdUser) {
-        return "Tur yoqol";
+        return null;
       }
 
       return jwt.sign({ id: createdUser.user_id }, "SECRET_KEY");
     },
     login: async (_, { username, password }) => {
       const foundUser = await model.login(username, password);
-
       if (!foundUser) {
-        return "Tur yoqol";
+        return null;
       }
 
       return jwt.sign({ id: foundUser.user_id }, "SECRET_KEY");
